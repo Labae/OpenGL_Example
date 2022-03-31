@@ -1,6 +1,4 @@
-#include <spdlog/spdlog.h>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "common.h"
 
 void OnFramebufferSizeChanged(GLFWwindow* window, const int width, const int height)
 {

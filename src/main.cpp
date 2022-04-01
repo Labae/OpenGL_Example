@@ -1,4 +1,5 @@
 #include "common.h"
+#include "context.h"
 
 void OnFramebufferSizeChanged(GLFWwindow* window, const int width, const int height)
 {
@@ -20,14 +21,6 @@ void OnKeyEvent(GLFWwindow* window, const int key, const int scanCode, const int
     {
         glfwSetWindowShouldClose(window, true);
     }
-}
-
-void Render(GLFWwindow* window)
-{
-    glClearColor(0.87f, 0.86f, 0.86f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glfwSwapBuffers(window);
 }
 
 int main(int argc, const char** argv)
@@ -70,6 +63,14 @@ int main(int argc, const char** argv)
     auto glVersion = glGetString(GL_VERSION);
     SPDLOG_INFO("OpenGL context version: {}", glVersion);
 
+    auto context = Context::Create();
+    if (!context)
+    {
+        SPDLOG_ERROR("Failed to create context.");
+        glfwTerminate();
+        return -1;
+    }
+
     OnFramebufferSizeChanged(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
     glfwSetKeyCallback(window, OnKeyEvent);
@@ -77,10 +78,12 @@ int main(int argc, const char** argv)
     SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window))
     {
+        context->Render();
+        glfwSwapBuffers(window);
         glfwPollEvents();
-        Render(window);
     }
 
+    context.reset();
     glfwTerminate();
 
     return 0;

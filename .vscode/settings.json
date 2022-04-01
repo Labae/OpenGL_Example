@@ -1,5 +1,13 @@
 {
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}"
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
-        "fstream": "cpp"
+        "*.h": "cpp",
+        "*.cpp": "cpp",
+        "vector": "cpp",
+        "xiosbase": "cpp"
     }
 }

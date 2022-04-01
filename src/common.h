@@ -1,7 +1,11 @@
-#ifndef __COMMON_H_
-#define __COMMON_H_
+#ifndef __COMMON_H__
+#define __COMMON_H__
 
+#ifdef WIN32
+#include <windows.h>
+#endif
 #include <memory>
+#include <vector>
 #include <string>
 #include <optional>
 #include <glad/glad.h>
@@ -14,6 +18,6 @@ using klassName ## UPtr = std::unique_ptr<klassName>; \
 using klassName ## Ptr = std::shared_ptr<klassName>; \
 using klassName ## WPtr = std::weak_ptr<klassName>;
 
-std::optional<std::string> LoadTextFile(const std::string& fileName);
+std::optional<std::string> LoadTextFile(const std::string& filename);
 
-#endif // __COMMON_H_
+#endif // __COMMON_H__

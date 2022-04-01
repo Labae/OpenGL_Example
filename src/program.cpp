@@ -18,6 +18,11 @@ Program::~Program()
     }
 }
 
+void Program::Use() const
+{
+    glUseProgram(m_program);
+}
+
 bool Program::Link(const std::vector<ShaderPtr>& shaders)
 {
     m_program = glCreateProgram();

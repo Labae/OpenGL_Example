@@ -52,7 +52,7 @@ ExternalProject_Add(
     TEST_COMMAND ""
     CMAKE_ARGS 
         -DCMAKE_INSTALL_PREFIX=${DEP_INSTALL_DIR}
-        -DGLAD_INSTALL=ON
+        #-DGLAD_INSTALL=ON
 )
 
 # Dependency 리스트 및 라이브러리 파일 리스트 추가

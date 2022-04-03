@@ -58,3 +58,22 @@ ExternalProject_Add(
 # Dependency 리스트 및 라이브러리 파일 리스트 추가
 set(DEP_LIST ${DEP_LIST} dep_glad)
 set(DEP_LIBS ${DEP_LIBS} glad)
+
+# stb
+ExternalProject_Add(
+    dep_stb
+    GIT_REPOSITORY "https://github.com/nothings/stb.git"
+    GIT_TAG "master"
+    GIT_SHALLOW 1
+    UPDATE_COMMAND ""
+    PATCH_COMMAND ""
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    TEST_COMMAND ""
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy
+    ${PROJECT_BINARY_DIR}/dep_stb-prefix/src/dep_stb/stb_image.h
+    ${DEP_INSTALL_DIR}/include/stb/stb_image.h
+)
+
+# Dependency 리스트 및 라이브러리 파일 리스트 추가
+set(DEP_LIST ${DEP_LIST} dep_stb)

@@ -4,22 +4,22 @@
 #include "common.h"
 
 CLASS_PTR(VertexLayout)
-class VertexLayout
-{
-public:
+class VertexLayout {
+  public:
     static VertexLayoutUPtr Create();
     ~VertexLayout();
 
     uint32_t Get() const { return m_vertexArrayObject; }
     void Bind() const;
-    void SetAttrib(uint32_t attribIndex, int count, uint32_t type, bool normalized, size_t stride, size_t offset) const;
+    void SetAttrib(uint32_t attribIndex, int count, uint32_t type,
+                   bool normalized, size_t stride, size_t offset) const;
     void DisableAttrib(uint32_t attribIndex);
 
-private:
+  private:
     VertexLayout() {}
     void Init();
 
-    uint32_t m_vertexArrayObject { 0 };
+    uint32_t m_vertexArrayObject{0};
 };
 
-#endif  // __VERTEX_LAYOUT_H__  
+#endif // __VERTEX_LAYOUT_H__

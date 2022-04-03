@@ -5,20 +5,19 @@
 #include "shader.h"
 
 CLASS_PTR(Program)
-class Program
-{
-public:
-    static ProgramUPtr Create(const std::vector<ShaderPtr>& shaders);
+class Program {
+ public:
+  static ProgramUPtr Create(const std::vector<ShaderPtr> &shaders);
 
-    ~Program();
+  ~Program();
 
-    uint32_t Get() const { return m_program; }
-    void Use() const;
+  uint32_t Get() const { return m_program; }
+  void Use() const;
 
-private:
-    Program() {}
-    bool Link(const std::vector<ShaderPtr>& shaders);
-    uint32_t m_program { 0 };
+ private:
+  Program() {}
+  bool Link(const std::vector<ShaderPtr> &shaders);
+  uint32_t m_program{0};
 };
 
 #endif  // __PROGRAM__

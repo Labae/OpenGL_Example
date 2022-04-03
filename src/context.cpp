@@ -59,8 +59,39 @@ bool Context::Init() {
 
   SPDLOG_INFO("Image : {}x{}, {} channels", image->GetWidth(),
               image->GetHeight(), image->GetChannelCount());
-
   m_texture = Texture::CreateFromImage(image.get());
+
+  auto image2 = Image::Load("./image/awesomeface.png");
+  if (!image2) {
+    return false;
+  }
+
+  SPDLOG_INFO("Image : {}x{}, {} channels", image2->GetWidth(),
+              image2->GetHeight(), image2->GetChannelCount());
+  m_texture2 = Texture::CreateFromImage(image2.get());
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, m_texture->Get());
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, m_texture2->Get());
+
+  m_program->Use();
+  glUniform1i(glGetUniformLocation(m_program->Get(), "tex"), 0);
+  glUniform1i(glGetUniformLocation(m_program->Get(), "tex2"), 1);
+
+  auto transform = glm::mat4(1.0f);
+  auto translate = glm::mat4(1.0f);
+  translate = glm::translate(translate, glm::vec3(0.2f, 0.2f, 0.0f));
+  auto rotate = glm::mat4(1.0f);
+  rotate =
+      glm::rotate(rotate, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+  auto scale = glm::mat4(1.0f);
+  scale = glm::scale(scale, glm::vec3(0.3f, 0.1f, 0.0f));
+
+  transform = translate * rotate * scale;
+
+  auto transformLoc = glGetUniformLocation(m_program->Get(), "transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
   return true;
 }

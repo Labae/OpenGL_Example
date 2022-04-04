@@ -1,6 +1,7 @@
 #include "context.h"
 
 #include "image.h"
+#include <imgui.h>
 
 ContextUPtr Context::Create() {
     auto context = ContextUPtr(new Context());
@@ -13,170 +14,28 @@ ContextUPtr Context::Create() {
 
 bool Context::Init() {
     float vertices[] = {
-        -0.5f,
-        -0.5f,
-        -0.5f,
-        0.0f,
-        0.0f,
-        0.5f,
-        -0.5f,
-        -0.5f,
-        1.0f,
-        0.0f,
-        0.5f,
-        0.5f,
-        -0.5f,
-        1.0f,
-        1.0f,
-        -0.5f,
-        0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f,
 
-        -0.5f,
-        -0.5f,
-        0.5f,
-        0.0f,
-        0.0f,
-        0.5f,
-        -0.5f,
-        0.5f,
-        1.0f,
-        0.0f,
-        0.5f,
-        0.5f,
-        0.5f,
-        1.0f,
-        1.0f,
-        -0.5f,
-        0.5f,
-        0.5f,
-        0.0f,
-        1.0f,
+        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, -0.5f, 0.5f,  0.5f,  0.0f, 1.0f,
 
-        -0.5f,
-        0.5f,
-        0.5f,
-        1.0f,
-        0.0f,
-        -0.5f,
-        0.5f,
-        -0.5f,
-        1.0f,
-        1.0f,
-        -0.5f,
-        -0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
-        -0.5f,
-        -0.5f,
-        0.5f,
-        0.0f,
-        0.0f,
+        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
 
-        0.5f,
-        0.5f,
-        0.5f,
-        1.0f,
-        0.0f,
-        0.5f,
-        0.5f,
-        -0.5f,
-        1.0f,
-        1.0f,
-        0.5f,
-        -0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
-        0.5f,
-        -0.5f,
-        0.5f,
-        0.0f,
-        0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, 0.5f,  0.0f, 0.0f,
 
-        -0.5f,
-        -0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
-        0.5f,
-        -0.5f,
-        -0.5f,
-        1.0f,
-        1.0f,
-        0.5f,
-        -0.5f,
-        0.5f,
-        1.0f,
-        0.0f,
-        -0.5f,
-        -0.5f,
-        0.5f,
-        0.0f,
-        0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
 
-        -0.5f,
-        0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
-        0.5f,
-        0.5f,
-        -0.5f,
-        1.0f,
-        1.0f,
-        0.5f,
-        0.5f,
-        0.5f,
-        1.0f,
-        0.0f,
-        -0.5f,
-        0.5f,
-        0.5f,
-        0.0f,
-        0.0f,
+        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  0.5f,  0.0f, 0.0f,
     };
 
     uint32_t indices[] = {
-        0,
-        2,
-        1,
-        2,
-        0,
-        3,
-        4,
-        5,
-        6,
-        6,
-        7,
-        4,
-        8,
-        9,
-        10,
-        10,
-        11,
-        8,
-        12,
-        14,
-        13,
-        14,
-        12,
-        15,
-        16,
-        17,
-        18,
-        18,
-        19,
-        16,
-        20,
-        22,
-        21,
-        22,
-        20,
-        23,
+        0,  2,  1,  2,  0,  3,  4,  5,  6,  6,  7,  4,  8,  9,  10, 10, 11, 8,
+        12, 14, 13, 14, 12, 15, 16, 17, 18, 18, 19, 16, 20, 22, 21, 22, 20, 23,
     };
 
     m_vertexLayout = VertexLayout::Create();
@@ -188,8 +47,9 @@ bool Context::Init() {
     m_vertexLayout->SetAttrib(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
                               sizeof(float) * 3);
 
-    m_indexBuffer = Buffer::CreateWithData(
-        GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, indices, sizeof(uint32_t) * 36);
+    m_indexBuffer =
+        Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, indices,
+                               sizeof(uint32_t) * 36);
 
     ShaderPtr vertexShader =
         Shader::CreateFromFile("./shader/texture.vs", GL_VERTEX_SHADER);
@@ -240,37 +100,55 @@ bool Context::Init() {
 }
 
 void Context::Render() {
+    if (ImGui::Begin("UI Window")) {
+        if (ImGui::ColorEdit4("Clear color", glm::value_ptr(m_clearColor))) {
+            glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b,
+                         m_clearColor.w);
+        }
+
+        ImGui::Separator();
+        ImGui::DragFloat3("Camera pos", glm::value_ptr(m_cameraPos), 0.01f);
+        ImGui::DragFloat("Camera yaw", &m_cameraYaw, 0.5f);
+        ImGui::DragFloat("Camera pitch", &m_cameraPitch, 0.5f, -89.0f, 89.0f);
+
+        ImGui::Separator();
+        if (ImGui::Button("Reset camera")){
+          m_cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+          m_cameraYaw = 0.0f;
+          m_cameraPitch = 0.0f;
+        }
+    }
+    ImGui::End();
+
     std::vector<glm::vec3> cubePositions = {
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),
-        glm::vec3(-1.3f, 1.0f, -1.5f),
+        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f),
     };
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    m_cameraFront = glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraYaw), glm::vec3(0.0f, 1.0f, 0.0f)) *
-                    glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraPitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
+    m_cameraFront = glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraYaw),
+                                glm::vec3(0.0f, 1.0f, 0.0f)) *
+                    glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraPitch),
+                                glm::vec3(1.0f, 0.0f, 0.0f)) *
                     glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
 
-    auto projection = glm::perspective(glm::radians(45.0f),
-                                       (float)m_width / (float)m_height,
-                                       0.01f, 100.0f);
+    auto projection = glm::perspective(
+        glm::radians(45.0f), (float)m_width / (float)m_height, 0.01f, 100.0f);
 
-    auto view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
+    auto view =
+        glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
 
     for (size_t i = 0; i < cubePositions.size(); i++) {
-        auto& pos = cubePositions[i];
+        auto &pos = cubePositions[i];
         auto model = glm::translate(glm::mat4(1.0f), pos);
         model = glm::rotate(
-            model, glm::radians((float)glfwGetTime() * 120.0f + 20.0f * (float)i),
+            model,
+            glm::radians((float)glfwGetTime() * 120.0f + 20.0f * (float)i),
             glm::vec3(1.0f, 0.5f, 0.0f));
         auto transform = projection * view * model;
         m_program->SetUniform("transform", transform);
@@ -278,7 +156,7 @@ void Context::Render() {
     }
 }
 
-void Context::ProcessInput(GLFWwindow* window) {
+void Context::ProcessInput(GLFWwindow *window) {
     if (!m_cameraControl)
         return;
 
@@ -323,11 +201,15 @@ void Context::MouseMove(double x, double y) {
     m_cameraYaw -= deltaPos.x * cameraRotSpeed;
     m_cameraPitch -= deltaPos.y * cameraRotSpeed;
 
-    if (m_cameraYaw < 0.0f) m_cameraYaw += 360.0f;
-    if (m_cameraYaw > 360.0f) m_cameraYaw -= 360.0f;
+    if (m_cameraYaw < 0.0f)
+        m_cameraYaw += 360.0f;
+    if (m_cameraYaw > 360.0f)
+        m_cameraYaw -= 360.0f;
 
-    if (m_cameraPitch < -89.0f) m_cameraPitch = 89.0f;
-    if (m_cameraPitch > 89.0f) m_cameraPitch = 89.0f;
+    if (m_cameraPitch < -89.0f)
+        m_cameraPitch = 89.0f;
+    if (m_cameraPitch > 89.0f)
+        m_cameraPitch = 89.0f;
 
     m_prevMousePos = pos;
 }

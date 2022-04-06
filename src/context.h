@@ -1,12 +1,11 @@
 #ifndef __CONTEXT_H__
 #define __CONTEXT_H__
 
-#include "buffer.h"
 #include "common.h"
+#include "mesh.h"
 #include "program.h"
 #include "shader.h"
 #include "texture.h"
-#include "vertex_layout.h"
 
 CLASS_PTR(Context)
 class Context {
@@ -27,9 +26,7 @@ class Context {
   int m_width{WINDOW_WIDTH};
   int m_height{WINDOW_HEIGHT};
 
-  VertexLayoutUPtr m_vertexLayout;
-  BufferUPtr m_vertexBuffer;
-  BufferUPtr m_indexBuffer;
+  MeshUPtr m_box;
 
   // camera parameters
   bool m_animaiton{true};

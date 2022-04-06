@@ -15,6 +15,8 @@ ContextUPtr Context::Create() {
 
 bool Context::Init() {
   m_box = Mesh::CreateBox();
+  m_model = Model::Load("./model/backpack.obj");
+  if (!m_model) return false;
 
   m_simpleProgram = Program::Create("./shader/simple.vs", "./shader/simple.fs");
   if (!m_simpleProgram) return false;
@@ -24,12 +26,12 @@ bool Context::Init() {
 
   SPDLOG_INFO("Program id : {}", m_program->Get());
 
-  m_material.diffuse =
-      Texture::CreateFromImage(Image::Load("./image/container2.png").get());
+  m_material.diffuse = Texture::CreateFromImage(
+      Image::CreateSingleImage(4, 4, glm::vec4(1.0f)).get());
   if (!m_material.diffuse) return false;
 
   m_material.specular = Texture::CreateFromImage(
-      Image::Load("./image/container2_specular.png").get());
+      Image::CreateSingleImage(4, 4, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f)).get());
   if (!m_material.specular) return false;
 
   glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
@@ -113,7 +115,7 @@ void Context::Render() {
       "color", glm::vec4(m_light.ambient + m_light.diffuse, 1.0f));
   m_simpleProgram->SetUniform("transform",
                               projection * view * lightModelTransform);
-  m_box->Draw();
+  m_box->Draw(m_simpleProgram.get());
 
   m_program->Use();
   m_program->SetUniform("viewPos", m_cameraPos);
@@ -128,28 +130,20 @@ void Context::Render() {
   m_program->SetUniform("light.ambient", m_light.ambient);
   m_program->SetUniform("light.diffuse", m_light.diffuse);
   m_program->SetUniform("light.specular", m_light.specular);
+
   m_program->SetUniform("material.diffuse", 0);
   m_program->SetUniform("material.specular", 1);
   m_program->SetUniform("material.shininess", m_material.shininess);
-
   glActiveTexture(GL_TEXTURE0);
   m_material.diffuse->Bind();
   glActiveTexture(GL_TEXTURE1);
   m_material.specular->Bind();
 
-  for (size_t i = 0; i < cubePositions.size(); i++) {
-    auto &pos = cubePositions[i];
-    auto model = glm::translate(glm::mat4(1.0f), pos);
-    model = glm::rotate(
-        model,
-        glm::radians((m_animaiton ? (float)glfwGetTime() : 0.0f) * 120.0f +
-                     20.0f * (float)i),
-        glm::vec3(1.0f, 0.5f, 0.0f));
-    auto transform = projection * view * model;
-    m_program->SetUniform("transform", transform);
-    m_program->SetUniform("modelTransform", model);
-    m_box->Draw();
-  }
+  auto modelTransform = glm::mat4(1.0f);
+  auto transform = projection * view * modelTransform;
+  m_program->SetUniform("transform", transform);
+  m_program->SetUniform("modelTransform", modelTransform);
+  m_model->Draw(m_program.get());
 }
 
 void Context::ProcessInput(GLFWwindow *window) {

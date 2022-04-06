@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "mesh.h"
+#include "model.h"
 #include "program.h"
 #include "shader.h"
 #include "texture.h"
@@ -27,6 +28,7 @@ class Context {
   int m_height{WINDOW_HEIGHT};
 
   MeshUPtr m_box;
+  ModelUPtr m_model;
 
   // camera parameters
   bool m_animaiton{true};

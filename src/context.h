@@ -22,6 +22,7 @@ class Context {
     Context() {}
     bool Init();
     ProgramUPtr m_program;
+    ProgramUPtr m_simpleProgram;
 
     int m_width{WINDOW_WIDTH};
     int m_height{WINDOW_HEIGHT};
@@ -29,9 +30,6 @@ class Context {
     VertexLayoutUPtr m_vertexLayout;
     BufferUPtr m_vertexBuffer;
     BufferUPtr m_indexBuffer;
-
-    TextureUPtr m_texture;
-    TextureUPtr m_texture2;
 
     // camera parameters
     bool m_animaiton{true};
@@ -57,9 +55,8 @@ class Context {
 
     // material parameter
     struct Material {
-        glm::vec3 ambient{glm::vec3(1.0f, 0.5f, 0.3f)};
-        glm::vec3 diffuse{glm::vec3(1.0f, 0.5f, 0.3f)};
-        glm::vec3 specular{glm::vec3(0.5f, 0.5f, 0.5f)};
+        TextureUPtr diffuse;
+        TextureUPtr specular;
         float shininess{32.0f};
     };
     Material m_material;

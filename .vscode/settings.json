@@ -8,6 +8,7 @@
         "*.h": "cpp",
         "*.cpp": "cpp",
         "vector": "cpp",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "xstring": "cpp"
     }
 }

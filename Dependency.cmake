@@ -52,7 +52,7 @@ ExternalProject_Add(
     TEST_COMMAND ""
     CMAKE_ARGS 
         -DCMAKE_INSTALL_PREFIX=${DEP_INSTALL_DIR}
-        #-DGLAD_INSTALL=ON
+        -DGLAD_INSTALL=ON
 )
 
 # Dependency 리스트 및 라이브러리 파일 리스트 추가
@@ -98,12 +98,12 @@ ExternalProject_Add(
 set(DEP_LIST ${DEP_LIST} dep_glm)
 
 add_library(imgui
-imgui/imgui_draw.cpp
-imgui/imgui_tables.cpp
-imgui/imgui_widgets.cpp
-imgui/imgui.cpp
-imgui/imgui_impl_glfw.cpp
-imgui/imgui_impl_opengl3.cpp
+    imgui/imgui_draw.cpp
+    imgui/imgui_tables.cpp
+    imgui/imgui_widgets.cpp
+    imgui/imgui.cpp
+    imgui/imgui_impl_glfw.cpp
+    imgui/imgui_impl_opengl3.cpp
 )
 
 target_include_directories(imgui PRIVATE ${DEP_INCLUDE_DIR})
@@ -116,7 +116,7 @@ set(DEP_LIBS ${DEP_LIBS} imgui)
 ExternalProject_Add(
   dep_assimp
   GIT_REPOSITORY "https://github.com/assimp/assimp"
-  GIT_TAG "v5.2.3"
+  GIT_TAG "v5.0.1"
   GIT_SHALLOW 1
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
@@ -131,7 +131,7 @@ ExternalProject_Add(
   )
 set(DEP_LIST ${DEP_LIST} dep_assimp)
 set(DEP_LIBS ${DEP_LIBS}
-  assimp-vc143-mt$<$<CONFIG:Debug>:d>
-  zlibstatic$<$<CONFIG:Debug>:d>
-  IrrXML$<$<CONFIG:Debug>:d>
+    assimp-vc143-mt$<$<CONFIG:Debug>:d>
+    zlibstatic$<$<CONFIG:Debug>:d>
+    IrrXML$<$<CONFIG:Debug>:d>
 )

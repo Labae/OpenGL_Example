@@ -7,6 +7,7 @@
 #include "program.h"
 #include "shader.h"
 #include "texture.h"
+#include "framebuffer.h"
 
 CLASS_PTR(Context)
 class Context {
@@ -24,6 +25,7 @@ class Context {
   ProgramUPtr m_program;
   ProgramUPtr m_simpleProgram;
   ProgramUPtr m_textureProgram;
+  ProgramUPtr m_postProgram;
 
   int m_width{WINDOW_WIDTH};
   int m_height{WINDOW_HEIGHT};
@@ -42,6 +44,9 @@ class Context {
 
   float m_cameraPitch{-20.0f};
   float m_cameraYaw{0.0f};
+
+  FramebufferUPtr m_framebuffer;
+  float m_gamma{1.0f};
 
   glm::vec4 m_clearColor{glm::vec4(0.1f, 0.2f, 0.3f, 0.0f)};
 

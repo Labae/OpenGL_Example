@@ -14,7 +14,6 @@ ContextUPtr Context::Create() {
 }
 
 bool Context::Init() {
-  glEnable(GL_DEPTH_TEST);
   glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
   m_box = Mesh::CreateBox();
 
@@ -27,6 +26,9 @@ bool Context::Init() {
 
   m_program = Program::Create("./shader/lighting.vs", "./shader/lighting.fs");
   if (!m_program) return false;
+
+  m_postProgram = Program::Create("./shader/texture.vs", "./shader/gamma.fs");
+  if (!m_postProgram) return false;
 
   SPDLOG_INFO("Program id : {}", m_program->Get());
 
@@ -84,6 +86,8 @@ void Context::Render() {
                    m_clearColor.w);
     }
 
+    ImGui::DragFloat("gamma", &m_gamma, 0.01f, 0.0f, 2.0f);
+
     ImGui::Separator();
     ImGui::DragFloat3("Camera pos", glm::value_ptr(m_cameraPos), 0.01f);
     ImGui::DragFloat("Camera yaw", &m_cameraYaw, 0.5f);
@@ -95,6 +99,10 @@ void Context::Render() {
       m_cameraYaw = 0.0f;
       m_cameraPitch = 0.0f;
     }
+
+    float aspectRatio = (float)m_width / (float)m_height;
+    ImGui::Image((ImTextureID)m_framebuffer->GetColorAttachment()->Get(),
+                 ImVec2(150 * aspectRatio, 150), ImVec2(0, 1), ImVec2(1, 0));
   }
   ImGui::End();
 
@@ -106,7 +114,9 @@ void Context::Render() {
       glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f),
   };
 
+  m_framebuffer->Bind();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
 
   m_cameraFront = glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraYaw),
                               glm::vec3(0.0f, 1.0f, 0.0f)) *
@@ -204,6 +214,18 @@ void Context::Render() {
   transform = projection * view * modelTransform;
   m_textureProgram->SetUniform("transform", transform);
   m_plane->Draw(m_textureProgram.get());
+
+  Framebuffer::BindToDefault();
+
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+  m_postProgram->Use();
+  m_postProgram->SetUniform(
+      "transform", glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f)));
+  m_postProgram->SetUniform("gamma", m_gamma);
+  m_framebuffer->GetColorAttachment()->Bind();
+  m_postProgram->SetUniform("tex", 0);
+  m_plane->Draw(m_postProgram.get());
 }
 
 void Context::ProcessInput(GLFWwindow *window) {
@@ -262,4 +284,7 @@ void Context::Reshape(const int width, const int height) {
   m_width = width;
   m_height = height;
   glViewport(0, 0, m_width, m_height);
+
+  m_framebuffer =
+      Framebuffer::Create(Texture::Create(m_width, m_height, GL_RGBA));
 }

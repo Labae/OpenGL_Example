@@ -27,6 +27,9 @@ class Context {
   ProgramUPtr m_textureProgram;
   ProgramUPtr m_postProgram;
 
+  CubeTextureUPtr m_cubeTexture;
+  ProgramUPtr m_skyboxProgram;
+
   int m_width{WINDOW_WIDTH};
   int m_height{WINDOW_HEIGHT};
 

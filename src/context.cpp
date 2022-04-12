@@ -15,6 +15,7 @@ ContextUPtr Context::Create() {
 
 bool Context::Init() {
   glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+  glEnable(GL_DEPTH_TEST);
   m_box = Mesh::CreateBox();
 
   m_simpleProgram = Program::Create("./shader/simple.vs", "./shader/simple.fs");
@@ -59,6 +60,23 @@ bool Context::Init() {
   m_plane = Mesh::CreatePlane();
   m_windowTexture = Texture::CreateFromImage(
       Image::Load("./image/blending_transparent_window.png").get());
+
+  auto cubeRight = Image::Load("./image/skybox/right.jpg", false);
+  auto cubeLeft = Image::Load("./image/skybox/left.jpg", false);
+  auto cubeTop = Image::Load("./image/skybox/top.jpg", false);
+  auto cubeBottom = Image::Load("./image/skybox/bottom.jpg", false);
+  auto cubeFront = Image::Load("./image/skybox/front.jpg", false);
+  auto cubeBack = Image::Load("./image/skybox/back.jpg", false);
+  m_cubeTexture = CubeTexture::CreateFromImages({
+      cubeRight.get(),
+      cubeLeft.get(),
+      cubeTop.get(),
+      cubeBottom.get(),
+      cubeFront.get(),
+      cubeBack.get(),
+  });
+  m_skyboxProgram = Program::Create("./shader/skybox.vs", "./shader/skybox.fs");
+  if (!m_skyboxProgram) return false;
 
   return true;
 }
@@ -106,17 +124,8 @@ void Context::Render() {
   }
   ImGui::End();
 
-  std::vector<glm::vec3> cubePositions = {
-      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f),
-  };
-
   m_framebuffer->Bind();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
 
   m_cameraFront = glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraYaw),
                               glm::vec3(0.0f, 1.0f, 0.0f)) *
@@ -132,6 +141,18 @@ void Context::Render() {
 
   auto view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
 
+  glDisable(GL_CULL_FACE);
+  auto skyboxModelTransform = glm::translate(glm::mat4(1.0), m_cameraPos) *
+                              glm::scale(glm::mat4(1.0), glm::vec3(50.0f));
+  m_skyboxProgram->Use();
+  m_cubeTexture->Bind();
+  m_skyboxProgram->SetUniform("skybox", 0);
+  m_skyboxProgram->SetUniform("transform",
+                              projection * view * skyboxModelTransform);
+  m_box->Draw(m_skyboxProgram.get());
+
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
   auto lightModelTransform = glm::translate(glm::mat4(1.0), m_light.position) *
                              glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
 
@@ -192,9 +213,6 @@ void Context::Render() {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
 
   m_textureProgram->Use();
   m_windowTexture->Bind();
